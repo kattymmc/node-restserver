@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 require('./config/config');
 const bodyParser = require('body-parser');
@@ -11,35 +12,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/usuario', (req, res) => {
-    res.json('get Usuario');
-});
+app.use(require('./routes/usuario'));
 
-app.post('/usuario', (req, res) => {
-    let persona = req.body;
-    
-    if( persona.nombre === undefined ){
-        res.status(400).json({
-            ok: false,
-            mensaje:'El nombre es necesario'
-        })
-    } else {
-        res.json({
-            persona: body
-        });
-    }
-});
-
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id; // el id de la url
-    res.json(
-        id
-    );
-});
-
-app.delete('/usuario', (req, res) => {
-    res.json('delete Usuario');
-});
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.connect(process.env.URLDB,
+{ useFindAndModify: false },
+(err, res) => {
+    if (err) throw err;
+    console.log('Base de datos CONNECTED');
+})
 
 app.listen(process.env.PORT, () =>{
     console.log('Escuchando el puerto: ', process.env.PORT);
