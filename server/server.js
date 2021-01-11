@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 require('./config/config');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 //Middlewares app.use
 
@@ -15,6 +16,8 @@ app.use(bodyParser.json())
 // Configuración global de rutas
 app.use(require('./routes/index'));
 
+// Haciendo publica la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
